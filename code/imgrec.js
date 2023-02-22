@@ -1,10 +1,17 @@
 // 수정 1 : html 에 file 입력하는 칸을 사라지게 하면서 이전 코드 삭제함.
 let imgElement = new Image();
-window.addEventListener("paste", function(e) {
-    let item = Array.from(e.clipboardData.items).find(x => /^image\//.test(x.type));
-    let blob = item.getAsFile();
 
-    imgElement.src = URL.createObjectURL(blob);
+let isPaste = false;
+window.addEventListener("paste", function(e) {
+    if(!isPaste) {    
+        let item = Array.from(e.clipboardData.items).find(x => /^image\//.test(x.type));
+        let blob = item.getAsFile();
+        imgElement.src = URL.createObjectURL(blob);
+        isPaste = true;            
+    }
+    else {
+        console.log("이미지를 이미 입력하였습니다.");
+    }
 })
 
 // 파일 올리면 이미지 경로 획득 -> 이미지가 로드 되면
@@ -128,9 +135,8 @@ function setStoneOnBoard(isInterrupt, idText) {
         pinkbinImg.style.height="75px";
         slimeImg.style.width="75px";
         slimeImg.style.height="75px";
-        // 배열 인덱스 정보 추출
-        
-        
+
+        // 배열 인덱스 정보 추출               
         let cell = document.getElementById(idText);
         console.log(cell.classList);    
         if(cell.classList[0] == 'empty_cell'){
@@ -174,6 +180,7 @@ function click2error(clickCell) {
 
 var board;
 function reloadPage() {
+    isPaste = true; 
     location.reload();
 }
 function makeInitalBoard(image) {    
